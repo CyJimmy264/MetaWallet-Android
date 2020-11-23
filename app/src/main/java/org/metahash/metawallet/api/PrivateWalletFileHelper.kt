@@ -1,6 +1,7 @@
 package org.metahash.metawallet.api
 
 import android.os.Environment
+import android.util.Log
 import org.metahash.metawallet.data.models.Wallet
 import org.metahash.metawallet.extensions.PrivateWalletHelper
 import java.io.File
@@ -54,7 +55,10 @@ class PrivateWalletFileHelper {
         private fun getWalletFile(wallet: Wallet): File {
             val userFolder = getUserFolder(wallet.userLogin)
             val walletAddress = wallet.address
-            return File(userFolder, "$walletAddress$WALLET_FILE_POSTFIX$WALLET_FILE_EXTENSION")
+            Log.d("WALLETFILE", "Check ${userFolder} for $walletAddress$WALLET_FILE_POSTFIX$WALLET_FILE_EXTENSION")
+            val walletFile = File(userFolder, "$walletAddress$WALLET_FILE_POSTFIX$WALLET_FILE_EXTENSION")
+            Log.d("WALLETFILE", walletFile.readText(Charsets.UTF_8))
+            return walletFile
         }
 
         private fun getUserFolder(userName: String): File {
@@ -67,6 +71,7 @@ class PrivateWalletFileHelper {
         }
         private fun getRootFolder(): File {
             val externalRoot = Environment.getExternalStorageDirectory()
+            Log.d("WALLETFILE", "Downloads directory ${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()}")
             val mainFolder = File(externalRoot, ROOT_FOLDER_NAME)
             return File(mainFolder, WALLETS_FOLDER_NAME).apply {
                 if (!exists()) {
